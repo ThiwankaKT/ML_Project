@@ -173,15 +173,90 @@ st.markdown("""
 # Tabs for sections
 # -----------------------------
 tabs = st.tabs([
+    "Insights 📊",
     "Product Reorder Prediction 🔄",
     "Customer Insights & Segments 👥",
     "Frequently Bought Together 🛒"
 ])
 
+
+# -----------------------------
+# Tab 0: Insights
+# -----------------------------
+with tabs[0]:
+    st.header("Exploratory Data Insights 📊")
+    st.markdown("Quick visual overview of user behavior, product popularity, and reorder trends.")
+
+    col1, col2 = st.columns(2)
+
+    # Plot 1: Orders per Day of Week
+    orders_per_day = orders.groupby("order_dow")["order_id"].count().reset_index()
+    orders_per_day.rename(columns={"order_id":"Num Orders"}, inplace=True)
+    fig1 = px.bar(
+        orders_per_day,
+        x="order_dow",
+        y="Num Orders",
+        labels={"order_dow":"Day of Week"},
+        color="Num Orders",
+        color_continuous_scale="Blues",
+        title="Orders per Day of Week"
+    )
+    fig1.update_layout(showlegend=False)
+    col1.plotly_chart(fig1, use_container_width=True)
+
+    # Plot 2: Orders per Hour
+    orders_per_hour = orders.groupby("order_hour_of_day")["order_id"].count().reset_index()
+    orders_per_hour.rename(columns={"order_id":"Num Orders"}, inplace=True)
+    fig2 = px.bar(
+        orders_per_hour,
+        x="order_hour_of_day",
+        y="Num Orders",
+        labels={"order_hour_of_day":"Hour of Day"},
+        color="Num Orders",
+        color_continuous_scale="Oranges",
+        title="Orders per Hour of Day"
+    )
+    fig2.update_layout(showlegend=False)
+    col2.plotly_chart(fig2, use_container_width=True)
+
+    # Second row: Top 10 Products by Popularity
+    col3, col4 = st.columns(2)
+
+    top_products = order_products_prior.groupby("product_id")["order_id"].count().reset_index()
+    top_products = top_products.merge(products[["product_id","product_name"]], on="product_id")
+    top_products = top_products.sort_values("order_id", ascending=False).head(10)
+    fig3 = px.bar(
+        top_products,
+        x="order_id",
+        y="product_name",
+        orientation="h",
+        color="order_id",
+        color_continuous_scale="Viridis",
+        title="Top 10 Products by Orders",
+        labels={"order_id":"Num Orders","product_name":"Product"}
+    )
+    fig3.update_layout(yaxis={'categoryorder':'total ascending'}, showlegend=False)
+    col3.plotly_chart(fig3, use_container_width=True)
+
+    # Plot 4: Reorder Rate by Department
+    dept_reorder = order_products_prior.merge(products[["product_id","department_id"]], on="product_id")
+    dept_reorder = dept_reorder.groupby("department_id")["reordered"].mean().reset_index()
+    dept_reorder = dept_reorder.merge(departments, on="department_id")
+    fig4 = px.bar(
+        dept_reorder,
+        x="department",
+        y="reordered",
+        color="reordered",
+        color_continuous_scale="Teal",
+        title="Average Reorder Rate by Department",
+        labels={"reordered":"Avg Reorder Rate","department":"Department"}
+    )
+    col4.plotly_chart(fig4, use_container_width=True)
+
 # -----------------------------
 # Tab 1: Product Reorder Prediction
 # -----------------------------
-with tabs[0]:
+with tabs[1]:
 
     # Title and description
     st.markdown('<div class="main-title">🔄 Product Reorder Prediction</div>', unsafe_allow_html=True)
@@ -291,7 +366,7 @@ with tabs[0]:
 # -----------------------------
 # Tab 2: Customer Insights & Segments
 # -----------------------------
-with tabs[1]:
+with tabs[2]:
     st.header("Customer Insights & Segments")
     st.write("Explore the main customer groups and their behavior at a glance.")
 
@@ -386,7 +461,7 @@ with tabs[1]:
 # -----------------------------
 # Tab 3: Frequently Bought Together
 # -----------------------------
-with tabs[2]:
+with tabs[3]:
     st.header("Frequently Bought Together 🛒")
     st.write("See which products are commonly purchased together. Great for recommendations or promotions!")
 
