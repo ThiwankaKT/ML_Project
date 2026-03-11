@@ -87,11 +87,54 @@ scaler = joblib.load("scaler.pkl")
 # -----------------------------
 # Load datasets
 # -----------------------------
-orders = pd.read_csv("datasets/orders.csv")
-order_products_prior = pd.read_csv("datasets/order_products_prior.csv")
-products = pd.read_csv("datasets/products.csv")
-aisles = pd.read_csv("datasets/aisles.csv")
-departments = pd.read_csv("datasets/departments.csv")
+
+import pandas as pd
+import gdown
+
+# -----------------------------
+# Orders
+# -----------------------------
+file_id1 = "1l9NtpEuBGDUNBvpOCrh6NmSC9cJTPDiT"
+url1 = f"https://drive.google.com/uc?id={file_id1}"
+output1 = "orders.csv"
+gdown.download(url1, output1, quiet=False, fuzzy=True)
+orders = pd.read_csv(output1)
+
+# -----------------------------
+# Order Products Prior
+# -----------------------------
+file_id2 = "1_w_wwNi8Sq-s1L4G_NMP9B8o0GOqV6tF"
+url2 = f"https://drive.google.com/uc?id={file_id2}"
+output2 = "order_products_prior.csv"
+gdown.download(url2, output2, quiet=False, fuzzy=True)
+order_products_prior = pd.read_csv(output2)
+
+# -----------------------------
+# Products
+# -----------------------------
+file_id3 = "1UqjqEFaujFWjJ7k2h6KTs9-gISa5H2SC"
+url3 = f"https://drive.google.com/uc?id={file_id3}"
+output3 = "products.csv"
+gdown.download(url3, output3, quiet=False, fuzzy=True)
+products = pd.read_csv(output3)
+
+# -----------------------------
+# Aisles
+# -----------------------------
+file_id4 = "1yl5bmzf1VGaZ1ju7zwNKulyRINU547v5"
+url4 = f"https://drive.google.com/uc?id={file_id4}"
+output4 = "aisles.csv"
+gdown.download(url4, output4, quiet=False, fuzzy=True)
+aisles = pd.read_csv(output4)
+
+# -----------------------------
+# Departments
+# -----------------------------
+file_id5 = "1UhYLzYlN0WbFC15vEdMDyS1ojouTbW_M"
+url5 = f"https://drive.google.com/uc?id={file_id5}"
+output5 = "departments.csv"
+gdown.download(url5, output5, quiet=False, fuzzy=True)
+departments = pd.read_csv(output5)
 
 # Merge user_id into prior orders
 order_products_prior_user = order_products_prior.merge(
