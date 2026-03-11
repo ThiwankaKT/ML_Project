@@ -220,22 +220,38 @@ with tabs[1]:
 
             st.metric("Reorder Probability", f"{pred_prob:.2%}")
 
-            # Confidence bar
-            if pred_prob>=0.75:
-                bar_color = "#4CAF50"
-            elif pred_prob>=0.5:
-                bar_color = "#FFC107"
+            # Display confidence bar in sidebar
+            if pred_prob >= 0.75:
+                bar_color = "#4CAF50"  # green
+            elif pred_prob >= 0.5:
+                bar_color = "#FFC107"  # yellow
             else:
-                bar_color = "#F44336"
+                bar_color = "#F44336"  # red
 
             confidence_html = f"""
-            <div style="padding:5px; border-radius:12px; background-color:#e0e0e0; width:100%; margin-bottom:10px;">
-                <div style="width:{pred_prob*100}%; background-color:{bar_color}; height:30px; border-radius:12px;
-                display:flex; align-items:center; justify-content:center; font-weight:bold; color:white; font-size:14px;">
+            <div style="
+                padding:5px;
+                border-radius:12px;
+                background-color:#e0e0e0;
+                width:100%;
+                margin-bottom:10px;">
+                <div style="
+                    width:{pred_prob*100}%;
+                    background-color:{bar_color};
+                    height:30px;
+                    border-radius:12px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-weight:bold;
+                    color:white;
+                    font-size:14px;">
                     {pred_prob:.0%} Confidence
                 </div>
             </div>
             """
+
+            # Update the sidebar placeholder
             confidence_placeholder.markdown(confidence_html, unsafe_allow_html=True)
 
             # Feature table
