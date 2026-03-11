@@ -40,7 +40,7 @@ scaler = joblib.load("scaler.pkl")
 # -------------------------
 orders = pd.read_csv("orders_sample.csv")
 order_details = pd.read_csv("order_details_sample.csv")
-products = pd.read_csv("products_sample.csv")
+products = pd.read_csv("products_lookup.csv")
 aisles = pd.read_csv("aisles_sample.csv")
 departments = pd.read_csv("departments_sample.csv")
 ml_features = pd.read_csv("ml_features.csv")
