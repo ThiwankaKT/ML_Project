@@ -88,53 +88,41 @@ scaler = joblib.load("scaler.pkl")
 # Load datasets
 # -----------------------------
 
-import pandas as pd
+import os
 import gdown
+import pandas as pd
+
+# Helper function to download only if missing
+def download_if_missing(file_id, output_name):
+    if not os.path.exists(output_name):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output_name, quiet=False, fuzzy=True)
+    return pd.read_csv(output_name)
 
 # -----------------------------
 # Orders
 # -----------------------------
-file_id1 = "1l9NtpEuBGDUNBvpOCrh6NmSC9cJTPDiT"
-url1 = f"https://drive.google.com/uc?id={file_id1}"
-output1 = "orders.csv"
-gdown.download(url1, output1, quiet=False, fuzzy=True)
-orders = pd.read_csv(output1)
+orders = download_if_missing("1l9NtpEuBGDUNBvpOCrh6NmSC9cJTPDiT", "orders.csv")
 
 # -----------------------------
 # Order Products Prior
 # -----------------------------
-file_id2 = "1_w_wwNi8Sq-s1L4G_NMP9B8o0GOqV6tF"
-url2 = f"https://drive.google.com/uc?id={file_id2}"
-output2 = "order_products_prior.csv"
-gdown.download(url2, output2, quiet=False, fuzzy=True)
-order_products_prior = pd.read_csv(output2)
+order_products_prior = download_if_missing("1_w_wwNi8Sq-s1L4G_NMP9B8o0GOqV6tF", "order_products_prior.csv")
 
 # -----------------------------
 # Products
 # -----------------------------
-file_id3 = "1UqjqEFaujFWjJ7k2h6KTs9-gISa5H2SC"
-url3 = f"https://drive.google.com/uc?id={file_id3}"
-output3 = "products.csv"
-gdown.download(url3, output3, quiet=False, fuzzy=True)
-products = pd.read_csv(output3)
+products = download_if_missing("1UqjqEFaujFWjJ7k2h6KTs9-gISa5H2SC", "products.csv")
 
 # -----------------------------
 # Aisles
 # -----------------------------
-file_id4 = "1yl5bmzf1VGaZ1ju7zwNKulyRINU547v5"
-url4 = f"https://drive.google.com/uc?id={file_id4}"
-output4 = "aisles.csv"
-gdown.download(url4, output4, quiet=False, fuzzy=True)
-aisles = pd.read_csv(output4)
+aisles = download_if_missing("1yl5bmzf1VGaZ1ju7zwNKulyRINU547v5", "aisles.csv")
 
 # -----------------------------
 # Departments
 # -----------------------------
-file_id5 = "1UhYLzYlN0WbFC15vEdMDyS1ojouTbW_M"
-url5 = f"https://drive.google.com/uc?id={file_id5}"
-output5 = "departments.csv"
-gdown.download(url5, output5, quiet=False, fuzzy=True)
-departments = pd.read_csv(output5)
+departments = download_if_missing("1UhYLzYlN0WbFC15vEdMDyS1ojouTbW_M", "departments.csv")
 
 # Merge user_id into prior orders
 order_products_prior_user = order_products_prior.merge(
