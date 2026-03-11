@@ -6,6 +6,7 @@ import joblib
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.cluster import KMeans
 
 # --------------------------------
 # Page config and custom styling
