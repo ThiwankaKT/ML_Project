@@ -205,12 +205,12 @@ with tabs[1]:
 
             # Model prediction
             if model_choice == "Logistic Regression":
-                features_scaled = scaler.transform(features)
+                features_scaled = scaler.transform(np.nan_to_num(features))
                 prediction = log_model.predict(features_scaled)[0]
                 pred_prob = log_model.predict_proba(features_scaled)[0][1]
             else:
-                prediction = rf_model.predict(features)[0]
-                pred_prob = rf_model.predict_proba(features)[0][1]
+                prediction = rf_model.predict(np.nan_to_num(features))[0]
+                pred_prob = rf_model.predict_proba(np.nan_to_num(features))[0][1]
 
             # Display
             if prediction==1:
