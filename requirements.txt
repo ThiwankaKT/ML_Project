@@ -8,3 +8,5 @@ networkx
 matplotlib
 seaborn
 gdown
+sqlalchemy
+psycopg2-binary
