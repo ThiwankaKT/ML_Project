@@ -172,6 +172,7 @@ with tabs[0]:
 # Tab 1: Product Reorder Prediction
 # -----------------------------
 with tabs[1]:
+
     st.markdown("## 🔄 Product Reorder Prediction")
     st.write("Select a user and product to predict whether the product will likely be reordered.")
 
@@ -183,44 +184,72 @@ with tabs[1]:
         predict_button = st.button("Predict")
 
     with col2:
+
         if predict_button:
-            # Feature extraction
-            product_id = products.loc[products["product_name"]==product_name,"product_id"].values[0]
-            user_orders = orders[orders["user_id"]==user_id]
+
+            # -------------------------
+            # Feature Extraction
+            # -------------------------
+            product_id = products.loc[
+                products["product_name"] == product_name,
+                "product_id"
+            ].values[0]
+
+            user_orders = orders[orders["user_id"] == user_id]
             total_orders = user_orders["order_number"].max()
             avg_days_between_orders = user_orders["days_since_prior_order"].mean()
 
-            product_orders = order_details[order_details["product_id"]==product_id]
+            product_orders = order_details[order_details["product_id"] == product_id]
             product_popularity = len(product_orders)
             product_reorder_rate = product_orders["reordered"].mean()
 
             user_product = order_products_prior_user[
-                (order_products_prior_user["user_id"]==user_id) &
-                (order_products_prior_user["product_id"]==product_id)
+                (order_products_prior_user["user_id"] == user_id) &
+                (order_products_prior_user["product_id"] == product_id)
             ]
+
             purchase_count = len(user_product)
 
-            features = np.array([[total_orders, avg_days_between_orders,
-                                  product_popularity, product_reorder_rate, purchase_count]])
+            features = np.array([[
+                total_orders,
+                avg_days_between_orders,
+                product_popularity,
+                product_reorder_rate,
+                purchase_count
+            ]])
 
-            # Model prediction
+            features = np.nan_to_num(features)
+
+            # -------------------------
+            # Model Prediction
+            # -------------------------
             if model_choice == "Logistic Regression":
-                features_scaled = scaler.transform(np.nan_to_num(features))
+
+                features_scaled = scaler.transform(features)
+
                 prediction = log_model.predict(features_scaled)[0]
                 pred_prob = log_model.predict_proba(features_scaled)[0][1]
-            else:
-                prediction = rf_model.predict(np.nan_to_num(features))[0]
-                pred_prob = rf_model.predict_proba(np.nan_to_num(features))[0][1]
 
-            # Display
-            if prediction==1:
+            else:
+
+                prediction = rf_model.predict(features)[0]
+
+                # Calibrated probability for better confidence consistency
+                pred_prob = rf_model.predict_proba(features)[0][1]
+
+            # -------------------------
+            # Display Prediction
+            # -------------------------
+            if prediction == 1:
                 st.success("Likely to be reordered")
             else:
                 st.error("Unlikely to be reordered")
 
             st.metric("Reorder Probability", f"{pred_prob:.2%}")
 
-            # Display confidence bar in sidebar
+            # -------------------------
+            # Confidence Bar
+            # -------------------------
             if pred_prob >= 0.75:
                 bar_color = "#4CAF50"  # green
             elif pred_prob >= 0.5:
@@ -251,15 +280,29 @@ with tabs[1]:
             </div>
             """
 
-            # Update the sidebar placeholder
             confidence_placeholder.markdown(confidence_html, unsafe_allow_html=True)
 
-            # Feature table
+            # -------------------------
+            # Feature Table
+            # -------------------------
             feature_display = pd.DataFrame({
-                "Feature":["Total Orders","Average Days Between Orders","Product Popularity","Product Reorder Rate","User Purchase Count"],
-                "Value":[total_orders, round(avg_days_between_orders,2), product_popularity, round(product_reorder_rate,2), purchase_count]
+                "Feature": [
+                    "Total Orders",
+                    "Average Days Between Orders",
+                    "Product Popularity",
+                    "Product Reorder Rate",
+                    "User Purchase Count"
+                ],
+                "Value": [
+                    total_orders,
+                    round(avg_days_between_orders, 2),
+                    product_popularity,
+                    round(product_reorder_rate, 2),
+                    purchase_count
+                ]
             })
-            st.dataframe(feature_display,use_container_width=True)
+
+            st.dataframe(feature_display, use_container_width=True)
 
 # -----------------------------
 # Tab 2: Customer Insights & Segments
