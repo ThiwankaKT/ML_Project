@@ -224,11 +224,14 @@ with tabs[1]:
             # Model Prediction
             # -------------------------
             if model_choice == "Logistic Regression":
+                features_scaled = scaler.transform(np.nan_to_num(features))
 
-                features_scaled = scaler.transform(features)
+                raw_prob = log_model.predict_proba(features_scaled)[0][1]
 
-                prediction = log_model.predict(features_scaled)[0]
-                pred_prob = log_model.predict_proba(features_scaled)[0][1]
+                threshold = 0.35  # try 0.3–0.4
+
+                prediction = 1 if raw_prob >= threshold else 0
+                pred_prob = raw_prob
 
             else:
 
