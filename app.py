@@ -100,7 +100,7 @@ tabs = st.tabs([
 # Tab 0: Insights
 # -----------------------------
 with tabs[0]:
-    st.header("Exploratory Data Insights 📊")
+    st.header("Data Insights 📊")
     st.markdown("Quick visual overview of user behavior, product popularity, and reorder trends.")
 
     col1, col2 = st.columns(2)
