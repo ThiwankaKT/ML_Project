@@ -1,4 +1,4 @@
-# Instacart Analytics Dashboard – ML Project
+# Instacart Analytics Dashboard
 
 A Streamlit-powered analytics dashboard for retail (grocery store/Instacart-style) order analysis, product reorder predictions, customer segmentation, and market basket (association rule) analysis.  
 This project demonstrates full ML workflow: data cleaning, feature engineering, model training (Random Forest & Logistic Regression), clustering, and deploying results to an interactive dashboard.
